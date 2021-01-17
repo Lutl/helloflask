@@ -7,6 +7,7 @@
 """
 import click
 from flask import Flask
+from flask import url_for
 
 app = Flask(__name__)
 
@@ -14,7 +15,10 @@ app = Flask(__name__)
 # the minimal Flask application
 @app.route('/')
 def index():
-    return '<h1>Hello, World!</h1>'
+    # return '<h1>Hello, World!</h1>'
+    # 给 url_for 传递 _external 参数返回绝对链接
+    return url_for('say_hello', _external=True)
+
 
 
 # bind multiple URL for one view function
