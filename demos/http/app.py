@@ -22,8 +22,8 @@ from flask import (
     url_for,
     abort,
     session,
-    jsonify,
-    after_this_request
+    jsonify,    # 对传入的参数进行序列化，转换成 JSON 字符串作为相应主题，生成一个响应对象
+    after_this_request,
 )
 
 app = Flask(__name__)
@@ -75,15 +75,16 @@ def three_colors2(color):
     return "<p>Love is patient and kind.</p>"
 
 
-@app.route('/giao')
+@app.route("/giao")
 def giao():
     # @after_request 和 @after_this_request
     # 钩子必须接收一个响应类对象作为参数，并且返回同一个或更新后的响应对象
     @after_this_request
     def add_header(response):
-        response.headers['X-Foo'] = 'Parachute'
+        response.headers["X-Foo"] = "Parachute"
         return response
-    return 'Hello World!'
+
+    return "Hello World!"
 
 
 # return error response
@@ -116,29 +117,30 @@ body: Don't forget the party!
         response = make_response(body)
         response.mimetype = "text/plain"
     elif content_type == "html":
-        body = """<!DOCTYPE html>
-<html>
-<head></head>
-<body>
-  <h1>Note</h1>
-  <p>to: Peter</p>
-  <p>from: Jane</p>
-  <p>heading: Reminder</p>
-  <p>body: <strong>Don't forget the party!</strong></p>
-</body>
-</html>
-"""
+        body = """
+            <!DOCTYPE html>
+            <html>
+            <head></head>
+            <body>
+                <h1>Note</h1>
+                <p>to: Peter</p>
+                <p>from: Jane</p>
+                <p>heading: Reminder</p>
+                <p>body: <strong>Don't forget the party!</strong></p>
+            </body>
+            </html>
+        """
         response = make_response(body)
         response.mimetype = "text/html"
     elif content_type == "xml":
         body = """<?xml version="1.0" encoding="UTF-8"?>
 <note>
-  <to>Peter</to>
-  <from>Jane</from>
-  <heading>Reminder</heading>
-  <body>Don't forget the party!</body>
+    <to>Peter</to>
+    <from>Jane</from>
+    <heading>Reminder</heading>
+    <body>Don't forget the party!</body>
 </note>
-"""
+        """
         response = make_response(body)
         response.mimetype = "application/xml"
     elif content_type == "json":
