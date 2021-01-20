@@ -239,10 +239,12 @@ def bar():
     )
 
 
-@app.route("/do-something")
+@app.route("/do_something")
 def do_something():
     # do something here
-    return redirect_back()
+    # return redirect(url_for("hello"))
+    # return redirect(request.referrer or url_for("hello"))
+    return redirect(request.args.get("next", url_for("hello")))
 
 
 def is_safe_url(target):
