@@ -10,6 +10,7 @@ import os
 try:
     from urlparse import urlparse, urljoin
 except ImportError:
+    # Python3 需要从 urllib.parse 导入
     from urllib.parse import urlparse, urljoin
 
 from jinja2 import escape
@@ -37,6 +38,7 @@ def hello():
     name = request.args.get("name")
     if name is None:
         name = request.cookies.get("name", "Human")
+    # <script>window.location.href="http://www.baidu.com";</script>
     response = "<h1>Hello, %s!</h1>" % escape(name)  # escape name to avoid XSS
     # return different response according to the user's authentication status
     if "logged_in" in session:
@@ -206,10 +208,10 @@ def show_post():
 $(function() {
     $('#load').click(function() {
         $.ajax({
-            url: '/more',
-            type: 'get',
-            success: function(data){
-                $('.body').append(data);
+            url: '/more',   // 目标 URL
+            type: 'get',    // 请求方法
+            success: function(data){    // 返回 2XX 响应后触发的回调函数
+                $('.body').append(data);    // 将返回的响应插入到页面中
             }
         })
     })
@@ -244,7 +246,8 @@ def do_something():
     # do something here
     # return redirect(url_for("hello"))
     # return redirect(request.referrer or url_for("hello"))
-    return redirect(request.args.get("next", url_for("hello")))
+    # return redirect(request.args.get("next", url_for("hello")))
+    return redirect_back()
 
 
 def is_safe_url(target):
