@@ -9,85 +9,94 @@ import os
 from flask import Flask, render_template, flash, redirect, url_for, Markup
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', 'secret string')
-app.jinja_env.trim_blocks = True
-app.jinja_env.lstrip_blocks = True
+app.secret_key = os.getenv("SECRET_KEY", "secret string")
+app.jinja_env.trim_blocks = True  # 删除 jinja2 语句后的第一个空行
+app.jinja_env.lstrip_blocks = True    # 删除 jinja2 语句所在行之前的空格和制表符
 
 user = {
-    'username': 'Grey Li',
-    'bio': 'A boy who loves movies and music.',
+    "username": "Grey Li",
+    "bio": "A boy who loves movies and music.",
 }
 
 movies = [
-    {'name': 'My Neighbor Totoro', 'year': '1988'},
-    {'name': 'Three Colours trilogy', 'year': '1993'},
-    {'name': 'Forrest Gump', 'year': '1994'},
-    {'name': 'Perfect Blue', 'year': '1997'},
-    {'name': 'The Matrix', 'year': '1999'},
-    {'name': 'Memento', 'year': '2000'},
-    {'name': 'The Bucket list', 'year': '2007'},
-    {'name': 'Black Swan', 'year': '2010'},
-    {'name': 'Gone Girl', 'year': '2014'},
-    {'name': 'CoCo', 'year': '2017'},
+    {"name": "My Neighbor Totoro", "year": "1988"},
+    {"name": "Three Colours trilogy", "year": "1993"},
+    {"name": "Forrest Gump", "year": "1994"},
+    {"name": "Perfect Blue", "year": "1997"},
+    {"name": "The Matrix", "year": "1999"},
+    {"name": "Memento", "year": "2000"},
+    {"name": "The Bucket list", "year": "2007"},
+    {"name": "Black Swan", "year": "2010"},
+    {"name": "Gone Girl", "year": "2014"},
+    {"name": "CoCo", "year": "2017"},
 ]
 
 
-@app.route('/watchlist')
+@app.route("/watchlist")
 def watchlist():
-    return render_template('watchlist.html', user=user, movies=movies)
+    return render_template("watchlist.html", user=user, movies=movies)
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
 # register template context handler
-@app.context_processor
+@app.context_processor  # 自定义上下文
 def inject_info():
-    foo = 'I am foo.'
+    foo = "I am foo."
     return dict(foo=foo)  # equal to: return {'foo': foo}
 
 
+# 可以直接作为方法调用
+# app.context_processor(inject_info)
+
+
 # register template global function
-@app.template_global()
+@app.template_global()  # 自定义全局函数
 def bar():
-    return 'I am bar.'
+    return "I am bar."
+
+
+# 使用 app.add_template_global() 方法注册自定义全局函数
+# 使用 name 可以设置新的名字
+# app.add_template_global(bar, name="giao")
 
 
 # register template filter
-@app.template_filter()
+@app.template_filter()  # 自定义过滤器
 def musical(s):
-    return s + Markup(' &#9835;')
+    return s + Markup(" &#9835;")
 
 
 # register template test
-@app.template_test()
+@app.template_test()  # 自定义测试器
 def baz(n):
-    if n == 'baz':
+    if n == "baz":
         return True
     return False
 
 
-@app.route('/watchlist2')
+@app.route("/watchlist2")
 def watchlist_with_static():
-    return render_template('watchlist_with_static.html', user=user, movies=movies)
+    return render_template("watchlist_with_static.html", user=user, movies=movies)
 
 
 # message flashing
-@app.route('/flash')
+@app.route("/flash")
 def just_flash():
-    flash('I am flash, who is looking for me?')
-    return redirect(url_for('index'))
+    flash("I am flash, who is looking for me?")
+    return redirect(url_for("index"))
 
 
 # 404 error handler
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('errors/404.html'), 404
+    return render_template("errors/404.html"), 404
 
 
 # 500 error handler
 @app.errorhandler(500)
 def internal_server_error(e):
-    return render_template('errors/500.html'), 500
+    return render_template("errors/500.html"), 500

@@ -6,7 +6,7 @@
         <title>{% block title %}Template - HelloFlask{% endblock %}</title>
         <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
         {% block styles %}
-            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css' ) }}">
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css' ) }}">
         {% endblock %}
     {% endblock %}
 </head>
@@ -29,6 +29,10 @@
         </small>
     {% endblock %}
 </footer>
-{% block scripts %}{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/popprt.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+{% endblock %}
 </body>
 </html>

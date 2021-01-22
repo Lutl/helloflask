@@ -1,6 +1,17 @@
 {% extends 'base.html' %}
 {% from 'macros.html' import qux %}
 
+{% block styles %}
+{{ super() }}
+<style>
+    .foo {
+        color: red;
+    }
+</style>
+{% endblock styles %}
+
+{% block title %}Home{% endblock title %}
+
 {% block content %}
 {% set name='baz' %}
 <h1>Template</h1>
