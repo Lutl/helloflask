@@ -8,14 +8,33 @@
 import os
 import uuid
 
-from flask import Flask, render_template, flash, redirect, url_for, request, send_from_directory, session
-from flask_ckeditor import CKEditor, upload_success, upload_fail
+from flask import Flask
+from flask import render_template
+from flask import flash
+from flask import redirect
+from flask import url_for
+from flask import request
+from flask import send_from_directory
+from flask import session
+
+from flask_ckeditor import CKEditor
+from flask_ckeditor import upload_success
+from flask_ckeditor import upload_fail
+
 from flask_dropzone import Dropzone
 from flask_wtf.csrf import validate_csrf
 from wtforms import ValidationError
 
-from forms import LoginForm, FortyTwoForm, NewPostForm, UploadForm, MultiUploadForm, SigninForm, \
-    RegisterForm, SigninForm2, RegisterForm2, RichTextForm
+from forms import LoginForm
+from forms import FortyTwoForm
+from forms import NewPostForm
+from forms import UploadForm
+from forms import MultiUploadForm
+from forms import SigninForm
+from forms import RegisterForm
+from forms import SigninForm2
+from forms import RegisterForm2
+from forms import RichTextForm
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'secret string')

@@ -7,15 +7,28 @@
 """
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired, FileAllowed
-from wtforms import StringField, PasswordField, BooleanField, IntegerField, \
-    TextAreaField, SubmitField, MultipleFileField
-from wtforms.validators import DataRequired, Length, ValidationError, Email
+from flask_wtf.file import FileField
+from flask_wtf.file import FileRequired
+from flask_wtf.file import FileAllowed
+
+from wtforms import Form
+from wtforms import StringField
+from wtforms import PasswordField
+from wtforms import BooleanField
+from wtforms import IntegerField
+from wtforms import TextAreaField
+from wtforms import SubmitField
+from wtforms import MultipleFileField
+
+from wtforms.validators import DataRequired
+from wtforms.validators import Length
+from wtforms.validators import ValidationError
+from wtforms.validators import Email
 
 
 # 4.2.1 basic form example
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    username = StringField('Username', render_kw={"placeholder": "Your Username"}, validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(8, 128)])
     remember = BooleanField('Remember me')
     submit = SubmitField('Log in')
