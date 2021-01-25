@@ -83,8 +83,8 @@ def html():
 
 @app.route('/basic', methods=['GET', 'POST'])
 def basic():
-    form = LoginForm()
-    if form.validate_on_submit():
+    form = LoginForm(request.form)
+    if request.method == "POST" and form.validate():
         username = form.username.data
         flash('Welcome home, %s!' % username)
         return redirect(url_for('index'))

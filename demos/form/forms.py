@@ -27,7 +27,7 @@ from wtforms.validators import Email
 
 
 # 4.2.1 basic form example
-class LoginForm(FlaskForm):
+class LoginForm(Form):
     username = StringField('Username', render_kw={"placeholder": "Your Username"}, validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(8, 128)])
     remember = BooleanField('Remember me')
