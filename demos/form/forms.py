@@ -8,8 +8,8 @@
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
-from flask_wtf.file import FileRequired
-from flask_wtf.file import FileAllowed
+from flask_wtf.file import FileRequired # 验证是否包含文件对象
+from flask_wtf.file import FileAllowed  # 用来验证文件类型，属于服务器端验证
 
 from wtforms import Form
 from wtforms import StringField
@@ -21,13 +21,15 @@ from wtforms import SubmitField
 from wtforms import MultipleFileField
 
 from wtforms.validators import DataRequired
+# 类似于 DataRequired 验证器，但 InputRequired 仅验证用户是否有输入，不管输入的值是否有效
+from wtforms.validators import InputRequired
 from wtforms.validators import Length
 from wtforms.validators import ValidationError
 from wtforms.validators import Email
 
 
 # 4.2.1 basic form example
-class LoginForm(Form):
+class LoginForm(FlaskForm):
     username = StringField('Username', render_kw={"placeholder": "Your Username"}, validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired(), Length(8, 128)])
     remember = BooleanField('Remember me')

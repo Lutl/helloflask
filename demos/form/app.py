@@ -24,6 +24,7 @@ from flask_ckeditor import upload_fail
 from flask_dropzone import Dropzone
 from flask_wtf.csrf import validate_csrf
 from wtforms import ValidationError
+from wtforms import meta
 
 from forms import LoginForm
 from forms import FortyTwoForm
@@ -35,6 +36,9 @@ from forms import RegisterForm
 from forms import SigninForm2
 from forms import RegisterForm2
 from forms import RichTextForm
+
+# 对文件名进行安全过滤
+from werkzeug import secure_filename
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'secret string')
@@ -50,8 +54,8 @@ if not os.path.exists(app.config['UPLOAD_PATH']):
 app.config['ALLOWED_EXTENSIONS'] = ['png', 'jpg', 'jpeg', 'gif']
 
 # Flask config
-# set request body's max length
-# app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024  # 3Mb
+# set request body's max length 限制请求报文的最大长度，单位为 byte
+app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024  # 3Mb
 
 # Flask-CKEditor config
 app.config['CKEDITOR_SERVE_LOCAL'] = True
@@ -61,6 +65,9 @@ app.config['CKEDITOR_FILE_UPLOADER'] = 'upload_for_ckeditor'
 app.config['DROPZONE_ALLOWED_FILE_TYPE'] = 'image'
 app.config['DROPZONE_MAX_FILE_SIZE'] = 3
 app.config['DROPZONE_MAX_FILES'] = 30
+
+# Flask-WTF 使用 WTForms 内置的错误消息翻译
+app.config["WTF_I18N_ENABLED"] = False
 
 ckeditor = CKEditor(app)
 dropzone = Dropzone(app)
@@ -83,8 +90,10 @@ def html():
 
 @app.route('/basic', methods=['GET', 'POST'])
 def basic():
-    form = LoginForm(request.form)
-    if request.method == "POST" and form.validate():
+    form = LoginForm()
+    # 设置 meta 参数，传入 locals 值，配置中文，进行汉化
+    # form = LoginForm(meta={"locales": ["zh"]})
+    if form.validate_on_submit():
         username = form.username.data
         flash('Welcome home, %s!' % username)
         return redirect(url_for('index'))
