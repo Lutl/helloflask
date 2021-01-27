@@ -38,7 +38,7 @@ from forms import RegisterForm2
 from forms import RichTextForm
 
 # 对文件名进行安全过滤
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'secret string')
@@ -58,7 +58,7 @@ app.config['ALLOWED_EXTENSIONS'] = ['png', 'jpg', 'jpeg', 'gif']
 app.config['MAX_CONTENT_LENGTH'] = 3 * 1024 * 1024  # 3Mb
 
 # Flask-CKEditor config
-app.config['CKEDITOR_SERVE_LOCAL'] = True
+app.config['CKEDITOR_SERVE_LOCAL'] = True   # 使用扩展内置的本地资源
 app.config['CKEDITOR_FILE_UPLOADER'] = 'upload_for_ckeditor'
 
 # Flask-Dropzone config
@@ -69,7 +69,7 @@ app.config['DROPZONE_MAX_FILES'] = 30
 # Flask-WTF 使用 WTForms 内置的错误消息翻译
 app.config["WTF_I18N_ENABLED"] = False
 
-ckeditor = CKEditor(app)
+ckeditor = CKEditor(app)    # 实例化 CKEditor
 dropzone = Dropzone(app)
 
 
@@ -119,8 +119,10 @@ def custom_validator():
     return render_template('custom_validator.html', form=form)
 
 
+# filename 变量使用了 path 转换器，支持传入包含斜线的路径字符串
 @app.route('/uploads/<path:filename>')
 def get_file(filename):
+    # 这个视图作用与 Flask 内置的 static 视图类似
     return send_from_directory(app.config['UPLOAD_PATH'], filename)
 
 
@@ -228,6 +230,8 @@ def multi_form():
     signin_form = SigninForm()
     register_form = RegisterForm()
 
+    # 不需要管 HTTP 请求方法，如果是 GET 请求，data 就会是 False
+    # 所以也不需要使用 validate_on_submit 这种复杂的方法
     if signin_form.submit1.data and signin_form.validate():
         username = signin_form.username.data
         flash('%s, you just submit the Signin Form.' % username)
